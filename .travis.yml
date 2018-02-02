@@ -1,3 +1,4 @@
 language: bash
 script:
+ - chmod +x build.sh
  - ./build.sh
