@@ -1,5 +1,15 @@
 sudo: required
 dist: trusty
+
 script:
  - chmod +x build.sh
  - ./build.sh
+
+deploy:
+  provider: releases
+  api_key: "GITHUB OAUTH TOKEN"
+  file: "Postman-x86_64.AppImage"
+  skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
