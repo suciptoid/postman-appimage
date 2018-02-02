@@ -1,4 +1,5 @@
-language: bash
+sudo: required
+dist: trusty
 script:
  - chmod +x build.sh
  - ./build.sh
