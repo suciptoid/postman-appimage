@@ -4,8 +4,7 @@ wget -c https://dl.pstmn.io/download/latest/linux64 -O postman.tar.gz
 tar zxvf postman*tar.gz
 #cp Postman/resources/app/assets/icon.png Postman/postman.png
 cp Postman/app/resources/app/assets/icon.png Postman/postman.png
-#mv Postman/Postman Postman/AppRun
-mv Postman/app/Postman Postman/AppRun
+mv Postman/Postman Postman/AppRun
 cat > Postman/postman.desktop <<EOF
 [Desktop Entry]
 Version=1.0
