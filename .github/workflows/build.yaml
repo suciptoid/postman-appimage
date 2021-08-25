@@ -1,0 +1,62 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build AppImage
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Download Postman
+        run: wget -c https://dl.pstmn.io/download/latest/linux64 -O postman.tar.gz
+      - name: Download AppImageTool
+        run: |
+          wget -c https://github.com/$(wget -q https://github.com/probonopd/go-appimage/releases -O - | grep "appimagetool-.*-x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
+          chmod +x appimagetool-*.AppImage
+          
+
+      - name: Extract Postman
+        run: tar zxf postman*.tar.gz
+
+      - name: Create Desktop Shortcut
+        run: |
+          cp Postman/app/resources/app/assets/icon.png Postman/postman.png
+          mv Postman/Postman Postman/AppRun
+          cat > Postman/postman.desktop <<EOF
+          [Desktop Entry]
+          Version=1.0
+          Name=Postman
+          GenericName=Postman
+          Exec=./AppRun %U
+          Terminal=false
+          Icon=postman
+          Type=Application
+          Categories=Network;WebBrowser;
+          EOF
+      - name: 
+        run: |
+          ./appimagetool-*.AppImage --appimage-extract
+          VER=$(cat ./Postman/app/resources/app/package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
+          VERSION=$VER ARCH=x86_64 ./squashfs-root/AppRun Postman
+      
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Postman-*.AppImage
