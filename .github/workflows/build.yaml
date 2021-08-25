@@ -69,5 +69,5 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          nametag_name: continous
+          tag_name: continous
           files: Postman-*.AppImage
