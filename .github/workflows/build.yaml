@@ -20,7 +20,7 @@ jobs:
         run: wget -c https://dl.pstmn.io/download/latest/linux64 -O postman.tar.gz
       - name: Download AppImageTool
         run: |
-          wget -c https://github.com/$(wget -q https://github.com/probonopd/go-appimage/releases -O - | grep "appimagetool-.*-x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
+          wget -c $(wget -q https://api.github.com/repos/probonopd/go-appimage/releases/tags/continuous -O - | grep "appimagetool-.*-x86_64.AppImage\"" | tail -n 1 | cut -d '"' -f 4)
           chmod +x appimagetool-*.AppImage
           
 
