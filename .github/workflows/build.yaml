@@ -28,7 +28,7 @@ jobs:
         id: postman-version
         run: |
           tar zxf postman*.tar.gz
-          echo "::set-output name=VERSION::$(cat ./Postman/app/resources/app/package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')"
+          echo "::set-output name=VERSION::$(grep '"version"' ./Postman/app/resources/app/package.json | sed -E 's/.*"version":\s*"([^"]+)".*/\1/')"
           
       - name: Postman Version
         run: echo "Postman Version is ${{ steps.postman-version.outputs.VERSION }}"
@@ -49,7 +49,7 @@ jobs:
           Categories=Network;WebBrowser;
           EOF
 
-      - name: 
+      - name: Build Appimage
         run: |
           ./appimagetool-*.AppImage --appimage-extract
           VERSION=${{ steps.postman-version.outputs.VERSION }} ARCH=x86_64 ./squashfs-root/AppRun Postman
